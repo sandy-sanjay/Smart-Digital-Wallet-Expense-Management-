@@ -1,21 +1,21 @@
 # Smart Digital Wallet & Expense Management
 
-A robust, full-stack microservices application built for high performance, scalability, and security. It enables users to manage digital wallet balances, track expenses, categorize transactions, and gain real-time analytics.
+A robust microservices backend application built for high performance, scalability, and security. It exposes REST APIs designed to manage digital wallet balances, track expenses, categorize transactions, and gain real-time analytics.
 
 ---
 
 ## 🏗️ System Architecture & Flow
 
-The application is built using a strict 3-layer microservice architecture (Controller → Service → Repository), ensuring bounded contexts and independent scalability.
+The backend is built using a strict 3-layer microservice architecture (Controller → Service → Repository), ensuring bounded contexts and independent scalability.
 
 1. **Auth Service (Port 8081):** Manages user registration, login, and token issuance.
 2. **Wallet Service (Port 8082):** Maintains the source-of-truth for user balances with atomic DB operations.
 3. **Transaction Service (Port 8083):** Records incoming and outgoing funds with specific categorizations, securely communicating with the Wallet Service.
-4. **Analytics Service (Port 8084):** Aggregates transaction data and caches analytics snapshots into its own database for dashboard visualizations.
+4. **Analytics Service (Port 8084):** Aggregates transaction data and caches analytics snapshots into its own database.
 
 ```mermaid
 graph TD
-    Client[Client Dashboard] --> Auth[Auth Service :8081]
+    Client[API Client / Postman] --> Auth[Auth Service :8081]
     Client --> Wallet[Wallet Service :8082]
     Client --> Tx[Transaction Service :8083]
     Client --> Analytics[Analytics Service :8084]
@@ -30,8 +30,7 @@ graph TD
 
 ## 🛠️ Technology Stack
 
-- **Backend:** Java 17, Spring Boot 3.x, JPA/Hibernate, Lombok.
-- **Frontend:** React.js, Custom CSS, Axios, Recharts (Planned).
+- **Framework:** Java 17, Spring Boot 3.x, Spring Data JPA/Hibernate, Lombok.
 - **Database:** MySQL (Multi-schema for isolated microservices).
 - **Security:** Spring Security, BCrypt, JWT.
 
@@ -41,13 +40,11 @@ graph TD
 
 ```text
 smart-wallet/
-├── backend/
-│   ├── auth-service/        # Security & User Management
-│   ├── wallet-service/      # Atomic Balance Management
-│   ├── transaction-service/ # Expense Logging & Incomes
-│   └── analytics-service/   # Data Aggregation & Snapshots
-└── frontend/
-    └── smart-wallet-ui/     # React SPA (Work in progress)
+└── backend/
+    ├── auth-service/        # Security & User Management
+    ├── wallet-service/      # Atomic Balance Management
+    ├── transaction-service/ # Expense Logging & Incomes
+    └── analytics-service/   # Data Aggregation & Snapshots
 ```
 
 ---
@@ -63,11 +60,3 @@ smart-wallet/
    ```bash
    mvn spring-boot:run
    ```
-
-3. **Starting the Frontend**
-   ```bash
-   cd frontend/smart-wallet-ui
-   npm install
-   npm start
-   ```
-   *The application UI will be available at `http://localhost:3000` once implemented.*
