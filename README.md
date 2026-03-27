@@ -1,30 +1,21 @@
-# 🚀 Smart Digital Wallet & Expense Management
+# Smart Digital Wallet & Expense Management
 
 A robust, full-stack microservices application built for high performance, scalability, and security. It enables users to manage digital wallet balances, track expenses, categorize transactions, and gain real-time analytics.
 
 ---
 
-## 🏆 Hackathon Highlights
-- **Microservices Architecture:** Independently scalable Spring Boot services.
-- **Robust Security:** JWT-based stateless authentication, BCrypt password hashing, and Spring Security.
-- **Fail-Safe Transactions:** Atomic DB operations ensuring wallet consistencies.
-- **Analytics Dashboard:** Real-time visual insights built using React.js and standard Custom CSS.
+## 🏗️ System Architecture & Flow
 
----
+The application is built using a strict 3-layer microservice architecture (Controller → Service → Repository), ensuring bounded contexts and independent scalability.
 
-## 🏗️ Architecture & Microservices Design
+1. **Auth Service (Port 8081):** Manages user registration, login, and token issuance.
+2. **Wallet Service (Port 8082):** Maintains the source-of-truth for user balances with atomic DB operations.
+3. **Transaction Service (Port 8083):** Records incoming and outgoing funds with specific categorizations, securely communicating with the Wallet Service.
+4. **Analytics Service (Port 8084):** Aggregates transaction data and caches analytics snapshots into its own database for dashboard visualizations.
 
-We employed a microservices strategy handling bounded contexts:
-
-1. **Auth Service:** User registration, login, and token issuance.
-2. **Wallet Service:** Maintains the source-of-truth for user balances.
-3. **Transaction Service:** Records incoming and outgoing funds with specific categorizations.
-4. **Analytics Service:** Aggregates transaction data for dashboard visualizations.
-
-### Architecture Flow
 ```mermaid
 graph TD
-    Client[React Frontend Dashboard] --> Auth[Auth Service :8081]
+    Client[Client Dashboard] --> Auth[Auth Service :8081]
     Client --> Wallet[Wallet Service :8082]
     Client --> Tx[Transaction Service :8083]
     Client --> Analytics[Analytics Service :8084]
@@ -32,15 +23,17 @@ graph TD
     Auth --> DB_Auth[(MySQL: auth_db)]
     Wallet --> DB_Wallet[(MySQL: wallet_db)]
     Tx --> DB_Tx[(MySQL: tx_db)]
+    Analytics --> DB_Analytics[(MySQL: analytics_db)]
 ```
 
 ---
 
 ## 🛠️ Technology Stack
-- **Backend:** Java 17, Spring Boot 3.x, JPA/Hibernate.
-- **Frontend:** React.js, Standard Custom CSS, Axios, Recharts.
-- **Database:** MySQL (Multi-schema for microservices).
-- **Security:** Spring Security, JWT (JSON Web Tokens).
+
+- **Backend:** Java 17, Spring Boot 3.x, JPA/Hibernate, Lombok.
+- **Frontend:** React.js, Custom CSS, Axios, Recharts (Planned).
+- **Database:** MySQL (Multi-schema for isolated microservices).
+- **Security:** Spring Security, BCrypt, JWT.
 
 ---
 
@@ -49,38 +42,32 @@ graph TD
 ```text
 smart-wallet/
 ├── backend/
-│   ├── auth-service/        # Port 8081 - Security & Users
-│   ├── wallet-service/      # Port 8082 - Balance management
-│   ├── transaction-service/ # Port 8083 - Expense logging
-│   └── analytics-service/   # Port 8084 - Aggregations
+│   ├── auth-service/        # Security & User Management
+│   ├── wallet-service/      # Atomic Balance Management
+│   ├── transaction-service/ # Expense Logging & Incomes
+│   └── analytics-service/   # Data Aggregation & Snapshots
 └── frontend/
-    └── smart-wallet-ui/     # React SPA
+    └── smart-wallet-ui/     # React SPA (Work in progress)
 ```
 
 ---
 
-## 🚀 How to Run Locally
+## 🚀 Running the Application
 
-### Prerequisites
-- JDK 17+
-- Node.js 18+
-- MySQL Server installed locally
-- Maven
+1. **Database Setup**
+   Ensure you have a local MySQL server running on port `3306` with root access (username: `root`, password: `root`). 
+   The microservices will automatically create their respective schemas (`auth_db`, `wallet_db`, `tx_db`, `analytics_db`) upon startup.
 
-### 1. Configure Databases
-Ensure you have a local MySQL server running. The microservices will automatically create their required schemas (`auth_db`, `wallet_db`, `tx_db`) if not present.
+2. **Booting the Microservices**
+   Launch each microservice sequentially via your IDE, or run Maven locally inside each service's directory (auth-service, wallet-service, etc):
+   ```bash
+   mvn spring-boot:run
+   ```
 
-### 2. Run Backend Services
-Launch the microservices via your IDE, or run maven locally:
-```bash
-mvn spring-boot:run
-```
-*(Run this command in each microservice folder: auth-service, wallet-service, etc.)*
-
-### 3. Run Frontend
-```bash
-cd frontend/smart-wallet-ui
-npm install
-npm start
-```
-*The app will be available at `http://localhost:3000`.*
+3. **Starting the Frontend**
+   ```bash
+   cd frontend/smart-wallet-ui
+   npm install
+   npm start
+   ```
+   *The application UI will be available at `http://localhost:3000` once implemented.*
